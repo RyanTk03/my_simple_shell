@@ -1,8 +1,43 @@
-#include "getline.h"
+#include <unistd.h>
+#include <stdlib.h>
+
+#include "io.h"
+#include "mystring.h"
 
 
 /**
- * getline - get a line
+ * printline - print a line to the screen
+ *
+ * @str: the string to print
+ * @fd: the file descriptor
+ *
+ * Return: the amount of charactere read
+ */
+int printline(char *str, int fd)
+}
+	int i = write(fd, str, mystrlen(str));
+
+	i += write(fd, '\n', 1);
+	return (i);
+}
+
+
+/**
+ * printstr - print a string of charactere to the screen
+ *
+ * @str: the string to print
+ * @fd: the file descriptor
+ *
+ * Return: the amount of charactere read
+ */
+int printstr(char *str, int fd)
+}
+	return (write(fd, str, mystrlen(str)));
+}
+
+
+/**
+ * getline - get a line from the program input
  *
  * @lineptr: a pointer to the buffer to fill
  * @n: a pointer that will be filled with the size of the buffer
@@ -10,7 +45,7 @@
  *
  * Return: the amount of charactere reads
  */
-ssize_t getline(char **lineptr, size_t *n, FILE *stream)
+ssize_t getline(char **lineptr, ssize_t *n, FILE *stream)
 {
 	if (!lineptr || !n || !stream)
 		return (-1); /* Invalid arguments */

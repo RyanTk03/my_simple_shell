@@ -1,7 +1,9 @@
 #include "tokenizer.h"
 
+
 /**
- * getOperator - get the operator in the current position of the tokenization
+ * getCurrentCharType - get the type of the current charactere(the type of
+ * operator if it is one or OP_NONE if it is not an operator
  *
  * @str: the sring to check
  * @current: the current position of the tokenization processus
@@ -9,7 +11,7 @@
  * Return: the current operator or OP_NONE if there is no operator in the
  * current position
  */
-char getOperator(char *str, int *current)
+char getCurrentCharType(char *str, int *current)
 {
 	if (str[*current] == ';')
 	{
@@ -83,6 +85,35 @@ int getNextTokenLen(char *str, int i)
 
 
 /**
+ * createToken - create a token(argument value) for a command
+ *
+ * @src: the source from where get the token
+ * @from: the begining index from where get the token
+ * @len: the length of the token
+ *
+ * Return: the token created
+ */
+char *createToken(char *src, int from, int len)
+{
+	char token = malloc(sizeof(char) * (len + 1));
+
+	if (!token)
+	{
+		freeCmd(cmd);
+		return (NULL);
+	}
+
+	if (mystrncpy(src, token, from, len) < len)
+	{
+		freeCmd(cmd);
+		return (NULL);
+	}
+	token[len] = '\0';
+	return (token);
+}
+
+
+/**
  * tokenize - tokenize a source string
  * this function tokenize a string by doing a return for each token found in
  * the source. To get all token of a source, the same memorie address should
@@ -102,7 +133,7 @@ cmd_t *tokenize(char *src)
 		cmd_t *cmd = NULL;
 
 		initCmd(&cmd);
-		if (cmd != NULL)
+		if (cmd)
 		{
 			static char *srcSaved;
 			int j = 1;
@@ -110,38 +141,22 @@ cmd_t *tokenize(char *src)
 
 			if (src != srcSaved)
 				i = 0;
-			gotoNextNotSpace(src, &i);
 			while (!stop)
 			{
+				gotoNextNotSpace(src, &i);
 				int len = getNextTokenLen(src, i);
-				char token = malloc(sizeof(char) * (i + 1));
+				char token = createToken(src, i, len);
 
-				if (!token)
-				{
-					freeCmd(cmd);
-					return (NULL);
-				}
-				cmd->args = (cmd_t **) realloc(cmd->args, j + 1);
-				if (!cmd->args)
-				{
-					freeCmd(cmd);
-					free(token);
-					return (NULL);
-				}
-				cmd->args[j] = NULL;
-				cmd->args[j - 1] = token;
-				mystrcopy(src, token, i, len);
+				appendCmdArg(cmd, token);
 				i += len;
 				gotoNextNotSpace(src, &i);
 				token->op = get_Operator(src, &i);
 				if (token->op != OP_NONE)
 					stop = 1;
 				j++;
-				i++;
 			}
 			return (cmd);
 		}
-		return (NULL);
 	}
 	return (NULL);
 }
