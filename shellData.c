@@ -1,4 +1,6 @@
 #include "shellData.h"
+#include "env.h"
+#include "mystring.h"
 
 
 /**
@@ -14,7 +16,7 @@ void initShellData(shellData_t *data, char **argv, char **env)
 	{
 		data->cmdsHead = NULL;
 		data->alias = NULL;
-		fillEnvDict(data->dict, env);
+		fillEnvDict(data->env, env);
 		data->argv = argv;
 	}
 }
@@ -27,7 +29,7 @@ void initShellData(shellData_t *data, char **argv, char **env)
  */
 void resetShellData(shellData_t *shData)
 {
-	freeCmds(shData->cmdsHead);
+	freeCmds(&shData->cmdsHead);
 }
 
 
@@ -38,7 +40,7 @@ void resetShellData(shellData_t *shData)
  */
 void freeShellData(shellData_t *shData)
 {
-	freeCmds(shData->cmdsHead);
+	freeCmds(&shData->cmdsHead);
 	freeDict(shData->alias);
 	freeDict(shData->env);
 	freeList(shData->PATH);
@@ -53,7 +55,7 @@ void freeShellData(shellData_t *shData)
  *
  * Return: 1 if an alias where find and replaced or 0 else
  */
-int *replaceAlias(shellData_t *shData, char **src)
+int replaceAlias(shellData_t *shData, char **src)
 {
 	if (shData && src)
 	{

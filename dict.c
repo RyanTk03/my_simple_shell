@@ -1,3 +1,6 @@
+#include <stddef.h>
+#include <stdlib.h>
+
 #include "dict.h"
 #include "mystring.h"
 
@@ -43,9 +46,9 @@ dictItem_t *createDictItem(char *key, char *value)
  */
 void deleteDictItem(dict_t *dict, dictItem_t *item)
 {
-	if (dict && dict->fisrt && item)
+	if (dict && dict->head && item)
 	{
-		dictItem_t *current = dict->first, *last = dict->first;
+		dictItem_t *current = dict->head, *last = dict->head;
 
 		while (current && current != item)
 		{
@@ -54,8 +57,8 @@ void deleteDictItem(dict_t *dict, dictItem_t *item)
 		}
 		if (current)
 		{
-			if (current == dict->first)
-				dict->first = current->next;
+			if (current == dict->head)
+				dict->head = current->next;
 			else
 				last->next = current->next;
 
@@ -83,7 +86,7 @@ dictItem_t *setDictValue(dict_t *dict, char *key, char *value)
 {
 	if (dict != NULL)
 	{
-		dictItem_t *current = dict->first;
+		dictItem_t *current = dict->head;
 		char find = 0;
 
 		while (current)
@@ -103,8 +106,8 @@ dictItem_t *setDictValue(dict_t *dict, char *key, char *value)
 
 			if (newNode)
 			{
-				if (!dict->first)
-					dist->first = newNode;
+				if (!dict->head)
+					dict->head = newNode;
 				else
 					current->next = newNode;
 				dict->len++;
@@ -119,17 +122,17 @@ dictItem_t *setDictValue(dict_t *dict, char *key, char *value)
 /**
  * getDictValue - get the value of a key in the dictionnary
  *
- * @head: the dict where search for the key
+ * @dict: the dict where search for the key
  * @key: the key which value to get
  * @value: a pointer to a string which will contain the value of the key
  *
  * Return: the node(dictItem) where the key where found
  */
-dict_t *getDictValue(dict_t *head, char *key, char **value)
+dictItem_t *getDictValue(dict_t *dict, char *key, char **value)
 {
 	if (dict && key)
 	{
-		dictItem_t *current = dict->first;
+		dictItem_t *current = dict->head;
 
 		while (current)
 		{
@@ -155,7 +158,7 @@ void freeDict(dict_t *dict)
 {
 	if (dict)
 	{
-		dictItem_t *current = dict->head, last = NULL;
+		dictItem_t *current = dict->head, *last = NULL;
 
 		last = current;
 		while (current)

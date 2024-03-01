@@ -38,11 +38,10 @@ cmd_t *appendCmd(cmd_t **head, cmd_t *newCmd)
  *
  * @cmd: the command where add the argument
  * @arg: the argument to add
- * @argc: the current length of the command arguments
  *
  * Return: 0 if an error occured and 1 else
  */
-int appendCmdArg(cmd_t **cmd, char *arg, int argc)
+int appendCmdArg(cmd_t **cmd, char *arg)
 {
 	if (cmd && arg)
 	{
@@ -128,5 +127,6 @@ void freeCmds(cmd_t **head)
 			freeCmd(toDelete);
 		}
 	}
+	head = NULL;
 }
 

@@ -1,4 +1,6 @@
 #include <unistd.h>
+#include <stdlib.h>
+
 #include "env.h"
 #include "mystring.h"
 
@@ -13,7 +15,7 @@ void fillEnvDict(dict_t *dict, char **env)
 {
 	int i = 0;
 
-	while (env[i] != NULL && i < MAX_ENV_VARS)
+	while (env[i] != NULL)
 	{
 		char *env_var = env[i];
 		char *delimiter = mystrchr(env_var, '=');

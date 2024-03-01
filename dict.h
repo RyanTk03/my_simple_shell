@@ -1,6 +1,7 @@
 #ifndef DICT_H
 #define DICT_H
 
+
 /**
  * struct dictItem_s - an item key/value of the dictionnary
  *
@@ -12,7 +13,7 @@ typedef struct dictItem_s
 {
 	char *key;
 	char *value;
-	dict_t *next;
+	struct dictItem_s *next;
 } dictItem_t;
 
 
@@ -31,8 +32,8 @@ typedef struct dict_s
 
 dictItem_t *createDictItem(char *key, char *value);
 void deleteDictItem(dict_t *dict, dictItem_t *item);
-dict_t *setDictValue(dict_t *dict, char *key, char *value);
-dict_t *getDictValue(dict_t *dict, char *key, char **value);
+dictItem_t *setDictValue(dict_t *dict, char *key, char *value);
+dictItem_t *getDictValue(dict_t *dict, char *key, char **value);
 void freeDict(dict_t *dict);
 
 #endif /* DICT_H */

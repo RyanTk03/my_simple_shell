@@ -1,4 +1,12 @@
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
 #include "shell.h"
+#include "io.h"
+#include "tokenizer.h"
+#include "shellData.h"
 
 
 /**
@@ -28,7 +36,7 @@ char runCmd(shellData_t *shData, cmd_t *command)
 	}
 	else
 	{
-		printline("Error: cannot create the child process");
+		printline("Error: cannot create the child process", STDERR_FILENO);
 		return (0);
 	}
 }
@@ -47,9 +55,10 @@ int runCmdList(shellData_t *shData)
 
 	while (current_command != NULL)
 	{
-		shData->exitStatus = runCmd(current_command);
+		shData->exitStatus = runCmd(shData, current_command);
 		current_command = current_command->next;
 	}
+	return (1);
 }
 
 
@@ -70,7 +79,7 @@ int getCommandLine(shellData_t *shData)
 
 		if (shData->isInteractive)
 			printstr("$ ", STDOUT_FILENO);
-		s = getline(STDIN_FILENO, commandLine);
+		s = getline(commandLine, STDIN_FILENO);
 		if (s != EOF)
 		{
 			cmd = tokenize(shData, commandLine, &i, 1);
@@ -79,7 +88,7 @@ int getCommandLine(shellData_t *shData)
 				appendCmd(&shData->cmdsHead, cmd);
 				if (cmd->op == OP_COM)
 					break;
-				cmd = tokenize(shData, argStr, &i, 1);
+				cmd = tokenize(shData, commandLine, &i, 1);
 			}
 			return (1);
 		}
@@ -94,8 +103,10 @@ int getCommandLine(shellData_t *shData)
  *
  * @argv: argv pass to main function
  * @env: env pass to main function
+ *
+ * Return: the shell exit value
  */
-void startShell(char **argv, char **env)
+int startShell(char **argv, char **env)
 {
 	shellData_t shData;
 	int quit = 1;
@@ -105,12 +116,12 @@ void startShell(char **argv, char **env)
 	do
 	{
 		/* get the command line and tokenize it as a list of cmd_t */
-		if (getCommandLine(shData) == EOF)
+		if (getCommandLine(&shData) == EOF)
 			break;
 
 		/* run all the cmd_t tokenized */
-		runCmdList(shData);
-		if (shData->quit)
+		runCmdList(&shData);
+		if (shData.quit)
 			quit = 1;
 
 		/* reset the shell data for the next command line */

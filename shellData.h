@@ -3,6 +3,7 @@
 
 #include "dict.h"
 #include "list.h"
+#include "cmd.h"
 
 /**
  * struct shellData_s - contains the current instance of shell data
@@ -31,5 +32,8 @@ typedef struct shellData_s
 } shellData_t;
 
 void initShellData(shellData_t *data, char **argv, char **env);
+void resetShellData(shellData_t *shData);
+void freeShellData(shellData_t *shData);
+int replaceAlias(shellData_t *shData, char **src);
 
 #endif /* SHELL_DATA_H */

@@ -1,5 +1,5 @@
 #include "tokenizer.h"
-
+#include "mystring.h"
 
 /**
  * getCurrentCharType - get the type of the current charactere(the type of
@@ -25,7 +25,7 @@ char getCurrentCharType(char *str, int *current)
 	{
 		if (str[*current + 1] == '|')
 		{
-			*current++;
+			(*current)++;
 			return (OP_OR);
 		}
 		else
@@ -35,7 +35,7 @@ char getCurrentCharType(char *str, int *current)
 	{
 		if (str[*current + 1] == '&')
 		{
-			*curent++;
+			(*current)++;
 			return (OP_AND);
 		}
 		else
@@ -57,7 +57,7 @@ void gotoNextNotSpace(char *str, int *i)
 {
 	while (str[*i] == ' ')
 	{
-		*i++;
+		(*i)++;
 	}
 }
 
@@ -95,17 +95,14 @@ int getNextArgLen(char *str, int i)
  */
 char *getNextArgStr(char *src, int from, int len)
 {
-	char arg = malloc(sizeof(char) * (len + 1));
+	char *arg = (char *) malloc(sizeof(char) * (len + 1));
 
 	if (!arg)
-	{
-		freeCmd(cmd);
 		return (NULL);
-	}
 
 	if (mystrncpy(src, arg, from, len) < len)
 	{
-		freeCmd(cmd);
+		free(arg);
 		return (NULL);
 	}
 	arg[len] = '\0';
@@ -131,7 +128,7 @@ cmd_t *tokenize(shellData_t *shData, char *src, int *from, int handleAlias)
 {
 	if (src != NULL && src[*from] != '\0')
 	{
-		cmd_t *head = NULL, currentCmd = NULL;
+		cmd_t *head = NULL, *currentCmd = NULL;
 		int argc = 1;
 		char stop = 0;
 
@@ -139,9 +136,9 @@ cmd_t *tokenize(shellData_t *shData, char *src, int *from, int handleAlias)
 		{
 			gotoNextNotSpace(src, from);
 			int len = getNextArgLen(src, *from);
-			char argStr = getNextArgStr(src, *from, len);
+			char *argStr = getNextArgStr(src, *from, len);
 
-			if (argc == 1 && handleAlias && replaceAlias(shData, argStr))
+			if (argc == 1 && handleAlias && replaceAlias(shData, &argStr))
 			{
 				int i = 0;
 				cmd_t *cmdi = tokenize(shData, argStr, &i, 0);
@@ -154,7 +151,7 @@ cmd_t *tokenize(shellData_t *shData, char *src, int *from, int handleAlias)
 				}
 			}
 			else
-				appendCmdArg(currentCmd, argStr);
+				appendCmdArg(&currentCmd, argStr);
 			*from += len;
 			gotoNextNotSpace(src, from);
 			currentCmd->op = getCurrentCharType(src, from);

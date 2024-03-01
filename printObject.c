@@ -27,9 +27,9 @@ ssize_t printList(const list_t *h)
  *
  * Return: the amount of dict element printed
  */
-ssize_t printDict(dict_t *dict)
+ssize_t printDict(const dict_t *dict)
 {
-	dictItem_t *item = dict->first
+	dictItem_t *item = dict->head;
 	size_t n = 0;
 
 	while (item != NULL)

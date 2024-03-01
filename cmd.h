@@ -29,14 +29,14 @@ typedef struct cmd_s
 	char op;
 	char **args;
 	int argc;
-	cmd_t *next;
+	struct cmd_s *next;
 } cmd_t;
 
 
-int initCmd(cmd_t *cmd);
+int initCmd(cmd_t **cmd);
 cmd_t *appendCmd(cmd_t **head, cmd_t *newCmd);
-int appendCmdArg(cmd_t **cmd, char *arg, int argc);
+int appendCmdArg(cmd_t **cmd, char *arg);
 void freeCmd(cmd_t *cmd);
-void freeCmds(cmdList_t *cmds);
+void freeCmds(cmd_t **cmds);
 
 #endif /* CMD_LIST_H_INCLUDED */

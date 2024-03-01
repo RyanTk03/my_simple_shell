@@ -1,4 +1,7 @@
-#include "mysting.h"
+#include <stddef.h>
+#include <stdlib.h>
+
+#include "mystring.h"
 
 /**
  * mystrlen - returns the length of a string
@@ -59,8 +62,8 @@ int mystrncpy(char *src, char *dst, int from, int len)
 
 	for (i = from; i < from + len && src[i]; i++)
 	{
-		*dest = src[i];
-		dest++;
+		*dst = src[i];
+		dst++;
 	}
 
 	return (i);

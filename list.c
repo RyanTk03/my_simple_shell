@@ -46,7 +46,7 @@ void freeList(list_t *head)
 	{
 		toDel = head;
 		head = head->next;
-		free(toDel->str);
+		free(toDel->value);
 		free(toDel);
 	}
 }
