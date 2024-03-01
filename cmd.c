@@ -12,17 +12,17 @@
  */
 cmd_t *appendCmd(cmd_t **head, cmd_t *newCmd)
 {
-	if (head && newCmd)
+	if (head != NULL && newCmd != NULL)
 	{
 		newCmd->next = NULL;
-		if (!*head)
+		if (!(*head))
 		{
 			*head = newCmd;
 			return (*head);
 		}
 		cmd_t *current = *head;
 
-		while (current->next)
+		while (current->next != NULL)
 			current = current->next;
 
 		current->next = newCmd;
@@ -40,24 +40,30 @@ cmd_t *appendCmd(cmd_t **head, cmd_t *newCmd)
  * @arg: the argument to add
  * @argc: the current length of the command arguments
  *
- * Return: -1 if an error occured and 1 else
+ * Return: 0 if an error occured and 1 else
  */
-int appendCmdArg(cmd_t *cmd, char *arg, int argc)
+int appendCmdArg(cmd_t **cmd, char *arg, int argc)
 {
 	if (cmd && arg)
 	{
-		cmd->args = (char **) realloc(cmd->args, argc + 1);
-		if (!cmd->args)
+		if (!(*cmd))
 		{
-			freeCmd(cmd);
-			free(token);
-			return (-1);
+			*cmd = (cmd_t *) malloc(sizeof(cmd_t));
+			(*cmd)->argc = 0;
 		}
-		cmd->args[argc] = NULL;
-		cmd->args[argc - 1] = arg;
+
+		(*cmd)->args = (char **) realloc((*cmd)->args, (*cmd)->argc + 2);
+		if (!(*cmd)->args)
+		{
+			freeCmd(*cmd);
+			return (0);
+		}
+		(*cmd)->args[(*cmd)->argc + 1] = NULL;
+		(*cmd)->args[(*cmd)->argc] = arg;
+		(*cmd)->argc++;
 		return (1);
 	}
-	return (-1);
+	return (0);
 }
 
 

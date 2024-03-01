@@ -1,23 +1,4 @@
-#include "lists.h"
-
-/**
- * printList - Prints all the elements of a list_t list.
- *
- * @h: The head of the list.
- * Return: the number of nodes.
- */
-size_t printList(const list_t *h)
-{
-	size_t n = 0;
-
-	while (h != NULL)
-	{
-		printline(h->value, STDOUT_FILENO);
-		h = h->next;
-		n++;
-	}
-	return (n);
-}
+#include "list.h"
 
 
 /**
@@ -57,7 +38,7 @@ list_t *appendList(list_t **head, const char *str)
  *
  * @head: the head of the list.
  */
-void free_list(list_t *head)
+void freeList(list_t *head)
 {
 	list_t *toDel = NULL;
 

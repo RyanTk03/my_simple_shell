@@ -63,14 +63,14 @@ void gotoNextNotSpace(char *str, int *i)
 
 
 /**
- * getNextTokenLen - get next token len
+ * getNextArgLen - get next token len
  *
  * @str: the source string
  * @i: the current source tokenization index
  *
  * Return: the length of the next token
  */
-int getNextTokenLen(char *str, int i)
+int getNextArgLen(char *str, int i)
 {
 	int len = 0;
 
@@ -85,7 +85,7 @@ int getNextTokenLen(char *str, int i)
 
 
 /**
- * createToken - create a token(argument value) for a command
+ * getNextArgStr - get the string coresponding to an argument value for a cmd
  *
  * @src: the source from where get the token
  * @from: the begining index from where get the token
@@ -93,23 +93,23 @@ int getNextTokenLen(char *str, int i)
  *
  * Return: the token created
  */
-char *createToken(char *src, int from, int len)
+char *getNextArgStr(char *src, int from, int len)
 {
-	char token = malloc(sizeof(char) * (len + 1));
+	char arg = malloc(sizeof(char) * (len + 1));
 
-	if (!token)
+	if (!arg)
 	{
 		freeCmd(cmd);
 		return (NULL);
 	}
 
-	if (mystrncpy(src, token, from, len) < len)
+	if (mystrncpy(src, arg, from, len) < len)
 	{
 		freeCmd(cmd);
 		return (NULL);
 	}
-	token[len] = '\0';
-	return (token);
+	arg[len] = '\0';
+	return (arg);
 }
 
 
@@ -119,45 +119,51 @@ char *createToken(char *src, int from, int len)
  * the source. To get all token of a source, the same memorie address should
  * be send in param until a NULL token is returned
  *
+ * @shData: the shell data
  * @src: the source
+ * @from: the current index of the source tokenization
+ * @handleAlias: if the tokenization should take care of alias
  *
  * Return: a command that correspond to a token or NULL if there is a probleme
  * or if there no more token found
  */
-cmd_t *tokenize(char *src)
+cmd_t *tokenize(shellData_t *shData, char *src, int *from, int handleAlias)
 {
-	static int i;
-
-	if (src != NULL && src[i] != '\0')
+	if (src != NULL && src[*from] != '\0')
 	{
-		cmd_t *cmd = NULL;
+		cmd_t *head = NULL, currentCmd = NULL;
+		int argc = 1;
+		char stop = 0;
 
-		initCmd(&cmd);
-		if (cmd)
+		while (!stop)
 		{
-			static char *srcSaved;
-			int j = 1;
-			char stop = 0;
+			gotoNextNotSpace(src, from);
+			int len = getNextArgLen(src, *from);
+			char argStr = getNextArgStr(src, *from, len);
 
-			if (src != srcSaved)
-				i = 0;
-			while (!stop)
+			if (argc == 1 && handleAlias && replaceAlias(shData, argStr))
 			{
-				gotoNextNotSpace(src, &i);
-				int len = getNextTokenLen(src, i);
-				char token = createToken(src, i, len);
+				int i = 0;
+				cmd_t *cmdi = tokenize(shData, argStr, &i, 0);
 
-				appendCmdArg(cmd, token);
-				i += len;
-				gotoNextNotSpace(src, &i);
-				token->op = get_Operator(src, &i);
-				if (token->op != OP_NONE)
-					stop = 1;
-				j++;
+				while (!cmdi)
+				{
+					appendCmd(&head, cmdi);
+					currentCmd = cmdi;
+					cmdi = tokenize(shData, argStr, &i, 0);
+				}
 			}
-			return (cmd);
+			else
+				appendCmdArg(currentCmd, argStr);
+			*from += len;
+			gotoNextNotSpace(src, from);
+			currentCmd->op = getCurrentCharType(src, from);
+			if (currentCmd->op != OP_NONE)
+				stop = 1;
+			argc++;
+			free(argStr);
 		}
+		return (head);
 	}
 	return (NULL);
 }
-

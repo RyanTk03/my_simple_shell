@@ -144,3 +144,27 @@ dict_t *getDictValue(dict_t *head, char *key, char **value)
 	}
 	return (NULL);
 }
+
+
+/**
+ * freeDict - free a dictionnary
+ *
+ * @dict: a poiter to the dictionnary to free
+ */
+void freeDict(dict_t *dict)
+{
+	if (dict)
+	{
+		dictItem_t *current = dict->head, last = NULL;
+
+		last = current;
+		while (current)
+		{
+			deleteDictItem(dict, last);
+			last = current->next;
+			current = current->next;
+		}
+
+		free(dict);
+	}
+}
