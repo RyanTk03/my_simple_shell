@@ -1,5 +1,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 #include "shell.h"
@@ -11,6 +12,7 @@
 /**
  * runCmd - run a command
  *
+ * @shData: contains the shell data used to run the command
  * @command: a structure which represent the command to run
  *
  * Return: 1 if the command was corretly excecuted and 0 else
@@ -44,7 +46,7 @@ char runCmd(shellData_t *shData, cmd_t *command)
 /**
  * runCmdList - run a list of command
  *
- * @cmdsHead: the list of command to execute
+ * @shData: contains the shell data used to run the command
  *
  * Return: 1 if all command were executed corretly and 0 else
  */
@@ -78,7 +80,7 @@ int getCommandLine(shellData_t *shData)
 
 		if (shData->isInteractive)
 			printstr("$ ", STDOUT_FILENO);
-		s = getline(commandLine, STDIN_FILENO);
+		s = mygetline(commandLine, STDIN_FILENO);
 		if (s != EOF)
 		{
 			cmd = tokenize(shData, commandLine, &i, 1);
@@ -100,6 +102,7 @@ int getCommandLine(shellData_t *shData)
 /**
  * startShell - start the shell
  *
+ * @argc: the number of argument receives by the shell
  * @argv: argv pass to main function
  * @env: env pass to main function
  *
@@ -111,9 +114,7 @@ int startShell(int argc, char **argv, char **env)
 	int quit = 1;
 
 	initShellData(&shData, argc, argv, env);
-	if (isatty(STDIN_FILENO)) /* check if running interactive mode */
-	do
-	{
+	do {
 		/* get the command line and tokenize it as a list of cmd_t */
 		if (getCommandLine(&shData) == EOF)
 			break;
@@ -125,10 +126,9 @@ int startShell(int argc, char **argv, char **env)
 
 		/* reset the shell data for the next command line */
 		resetShellData(&shData);
-	}
-	while (!quit);
+	} while (!quit);
 
 	freeShellData(&shData);
-	return shData.exitStatus;
+	return (shData.exitStatus);
 }
 

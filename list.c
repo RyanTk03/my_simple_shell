@@ -34,7 +34,7 @@ list_t *appendList(list_t **head, const char *str)
 
 
 /**
- * free_list - frees a list_t list.
+ * freeList - frees a list_t list.
  *
  * @head: the head of the list.
  */

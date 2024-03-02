@@ -1,3 +1,5 @@
+#include <unistd.h>
+
 #include "shellData.h"
 #include "env.h"
 #include "mystring.h"
@@ -7,6 +9,7 @@
  * initShellData - init the shell data
  *
  * @data: the shell data structure
+ * @argc: the number of arguments receives by the shell
  * @argv: the shell arguments values
  * @env: the shell environment variable values
  */
@@ -19,6 +22,7 @@ void initShellData(shellData_t *data, int argc, char **argv, char **env)
 		fillEnvDict(data->env, env);
 		data->argv = argv;
 		data->argc = argc;
+		data->isInteractive = isatty(STDIN_FILENO);
 	}
 }
 

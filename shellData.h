@@ -14,6 +14,7 @@
  * @env: the environment's variable of the program
  * @PATH: the path
  * @cwd: the current working dir
+ * @argc: the number of arguments receives by the shell
  * @argv: the shell arguments
  * @quit: indicate if the shell should be exit or not
  * @exitStatus: the status of the exit or last command executed
@@ -32,7 +33,7 @@ typedef struct shellData_s
 	int exitStatus;
 } shellData_t;
 
-void initShellData(shellData_t *data,int argc, char **argv, char **env);
+void initShellData(shellData_t *data, int argc, char **argv, char **env);
 void resetShellData(shellData_t *shData);
 void freeShellData(shellData_t *shData);
 int replaceAlias(shellData_t *shData, char **src);

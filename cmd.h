@@ -19,7 +19,8 @@
  * struct cmd_s - a command node
  * @op: the operator used before the next command
  * @args: a vector of string of the arguments to send to the program/command
- * with args[0] the program/command to execute.
+ * with args[0] the program/command to execute
+ * @argc: the amount of argument of the command
  * @next: point to the next node
  *
  * Description: singly linked list node structure for a command

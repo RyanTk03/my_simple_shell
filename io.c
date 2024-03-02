@@ -37,13 +37,14 @@ int printstr(char *str, int fd)
 
 
 /**
- * getline - get a line from the program input
+ * mygetline - get a line from the program input
  *
  * @lineptr: a pointer to the buffer to fill
+ * @fd: the file descriptor to use
  *
  * Return: the amount of charactere reads
  */
-ssize_t getline(char *lineptr, int fd)
+ssize_t mygetline(char *lineptr, int fd)
 {
 	if (!lineptr)
 		return (-1); /* Invalid arguments */
