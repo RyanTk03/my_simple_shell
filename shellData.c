@@ -10,7 +10,7 @@
  * @argv: the shell arguments values
  * @env: the shell environment variable values
  */
-void initShellData(shellData_t *data, char **argv, char **env)
+void initShellData(shellData_t *data, int argc, char **argv, char **env)
 {
 	if (data)
 	{
@@ -18,6 +18,7 @@ void initShellData(shellData_t *data, char **argv, char **env)
 		data->alias = NULL;
 		fillEnvDict(data->env, env);
 		data->argv = argv;
+		data->argc = argc;
 	}
 }
 

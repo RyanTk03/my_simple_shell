@@ -27,11 +27,12 @@ typedef struct shellData_s
 	list_t *PATH;
 	char *cwd;
 	char **argv;
+	int argc;
 	int quit;
 	int exitStatus;
 } shellData_t;
 
-void initShellData(shellData_t *data, char **argv, char **env);
+void initShellData(shellData_t *data,int argc, char **argv, char **env);
 void resetShellData(shellData_t *shData);
 void freeShellData(shellData_t *shData);
 int replaceAlias(shellData_t *shData, char **src);

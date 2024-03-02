@@ -135,6 +135,7 @@ cmd_t *tokenize(shellData_t *shData, char *src, int *from, int handleAlias)
 		while (!stop)
 		{
 			gotoNextNotSpace(src, from);
+			{
 			int len = getNextArgLen(src, *from);
 			char *argStr = getNextArgStr(src, *from, len);
 
@@ -159,6 +160,7 @@ cmd_t *tokenize(shellData_t *shData, char *src, int *from, int handleAlias)
 				stop = 1;
 			argc++;
 			free(argStr);
+			}
 		}
 		return (head);
 	}

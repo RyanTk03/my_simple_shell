@@ -23,7 +23,7 @@ void fillEnvDict(dict_t *dict, char **env)
 		if (delimiter != NULL)
 		{
 			int key_len = delimiter - env_var;
-			int value_len = strlen(delimiter + 1);
+			int value_len = mystrlen(delimiter + 1);
 			char *key = (char *)malloc(key_len + 1);
 			char *value = (char *)malloc(value_len + 1);
 

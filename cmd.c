@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "shell.h"
 #include "cmd.h"
 
@@ -20,6 +22,7 @@ cmd_t *appendCmd(cmd_t **head, cmd_t *newCmd)
 			*head = newCmd;
 			return (*head);
 		}
+		{
 		cmd_t *current = *head;
 
 		while (current->next != NULL)
@@ -28,6 +31,7 @@ cmd_t *appendCmd(cmd_t **head, cmd_t *newCmd)
 		current->next = newCmd;
 
 		return (newCmd);
+		}
 	}
 	return (NULL);
 }

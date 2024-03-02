@@ -1,6 +1,5 @@
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/wait.h>
 #include <unistd.h>
 
 #include "shell.h"
@@ -106,12 +105,12 @@ int getCommandLine(shellData_t *shData)
  *
  * Return: the shell exit value
  */
-int startShell(char **argv, char **env)
+int startShell(int argc, char **argv, char **env)
 {
 	shellData_t shData;
 	int quit = 1;
 
-	initShellData(&shData, argv, env);
+	initShellData(&shData, argc, argv, env);
 	if (isatty(STDIN_FILENO)) /* check if running interactive mode */
 	do
 	{
