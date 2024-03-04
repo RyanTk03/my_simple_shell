@@ -1,5 +1,8 @@
+#include <unistd.h>
+
 #include "tokenizer.h"
 #include "mystring.h"
+#include "io.h"
 
 /**
  * getCurrentCharType - get the type of the current charactere(the type of
@@ -56,9 +59,7 @@ char getCurrentCharType(char *str, int *current)
 void gotoNextNotSpace(char *str, int *i)
 {
 	while (str[*i] == ' ')
-	{
 		(*i)++;
-	}
 }
 
 
@@ -74,7 +75,7 @@ int getNextArgLen(char *str, int i)
 {
 	int len = 0;
 
-	while (str[i] && str[i] != ' ')
+	while (str[i] != '\0' && str[i] != ' ')
 	{
 		len++;
 		i++;
@@ -134,8 +135,9 @@ cmd_t *tokenize(shellData_t *shData, char *src, int *from, int handleAlias)
 
 		while (!stop)
 		{
+		printstr("test-", STDOUT_FILENO);
 			gotoNextNotSpace(src, from);
-			{
+		{
 			int len = getNextArgLen(src, *from);
 			char *argStr = getNextArgStr(src, *from, len);
 
@@ -152,15 +154,20 @@ cmd_t *tokenize(shellData_t *shData, char *src, int *from, int handleAlias)
 				}
 			}
 			else
+			{
 				appendCmdArg(&currentCmd, argStr);
+				appendCmd(&head, currentCmd);
+		printstr("test-", STDOUT_FILENO);
+			}
 			*from += len;
 			gotoNextNotSpace(src, from);
 			currentCmd->op = getCurrentCharType(src, from);
-			if (currentCmd->op != OP_NONE)
+			if (currentCmd->op != OP_NONE || src[*from] == '\0')
 				stop = 1;
 			argc++;
-			free(argStr);
-			}
+		printstr(argStr, STDOUT_FILENO);
+		printstr(currentCmd->args[0], STDOUT_FILENO);
+		}
 		}
 		return (head);
 	}

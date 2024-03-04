@@ -16,22 +16,24 @@ cmd_t *appendCmd(cmd_t **head, cmd_t *newCmd)
 {
 	if (head != NULL && newCmd != NULL)
 	{
+		cmd_t *current = *head;
+
 		newCmd->next = NULL;
-		if (!(*head))
+		if (head == NULL)
 		{
 			*head = newCmd;
 			return (*head);
 		}
-		{
-		cmd_t *current = *head;
 
-		while (current->next != NULL)
+		while (current && current->next != NULL)
 			current = current->next;
 
-		current->next = newCmd;
-
-		return (newCmd);
+		if (current)
+		{
+			current->next = newCmd;
+			return (newCmd);
 		}
+		return (NULL);
 	}
 	return (NULL);
 }
@@ -52,6 +54,8 @@ int appendCmdArg(cmd_t **cmd, char *arg)
 		if (!(*cmd))
 		{
 			*cmd = (cmd_t *) malloc(sizeof(cmd_t));
+			(*cmd)->args = NULL;
+			(*cmd)->op = OP_NONE;
 			(*cmd)->argc = 0;
 		}
 

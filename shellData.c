@@ -62,7 +62,7 @@ void freeShellData(shellData_t *shData)
  */
 int replaceAlias(shellData_t *shData, char **src)
 {
-	if (shData && src)
+	if (shData && shData->alias && src)
 	{
 		dictItem_t *alias = getDictValue(shData->alias, *src, NULL);
 

@@ -84,7 +84,8 @@ int getCommandLine(shellData_t *shData)
 		if (s != EOF)
 		{
 			cmd = tokenize(shData, commandLine, &i, 1);
-			while (!cmd)
+		printstr("test", STDOUT_FILENO);
+			while (cmd)
 			{
 				appendCmd(&shData->cmdsHead, cmd);
 				if (cmd->op == OP_COM)
